@@ -16,10 +16,17 @@ prebuilt.start_server(null, (errorCode) => {
   console.log('start_server failed with error code', errorCode);
 });
 
-// TODO: figure out how to call this synchronously
-// mongoose.connect('mongodb://localhost:27017/dev');
+mongoose.connect('mongodb://localhost:27017/dev');
 
-const Todo = mongoose.model('Todo', {
-  text: String,
-  completed: Boolean,
-});
+const config = {
+  Todo: {
+    text: String,
+    completed: Boolean,
+  },
+};
+
+for (let key in config) {
+  let model = mongoose.model(key, config.key);
+}
+
+const Todo = config.Todo;
