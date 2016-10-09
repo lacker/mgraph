@@ -1,5 +1,12 @@
 const fs = require('fs');
 
+const {
+  graphql,
+  GraphQLBoolean,
+  GraphQLObjectType,
+  GraphQLString,
+} = require('graphql');
+
 const mongoose = require('mongoose');
 const prebuilt = require('mongodb-prebuilt');
 
@@ -29,4 +36,10 @@ for (let key in config) {
   let model = mongoose.model(key, config.key);
 }
 
-const Todo = config.Todo;
+const TodoType = new GraphQLObjectType({
+  name: 'Todo',
+  fields: {
+    text: { type: GraphQLString },
+    completed: { type: GraphQLBoolean },
+  },
+});
