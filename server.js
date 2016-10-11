@@ -26,20 +26,43 @@ prebuilt.start_server(null, (errorCode) => {
 mongoose.connect('mongodb://localhost:27017/dev');
 
 const config = {
-  Todo: {
-    text: String,
-    completed: Boolean,
-  },
+  text: String,
+  completed: Boolean,
 };
 
-for (let key in config) {
-  let model = mongoose.model(key, config.key);
-}
+const schema = new mongoose.Schema(config);
+
+const Todo = mongoose.model('Todo', schema);
 
 const TodoType = new GraphQLObjectType({
   name: 'Todo',
   fields: {
+    id: { type: GraphQLString },
     text: { type: GraphQLString },
     completed: { type: GraphQLBoolean },
   },
 });
+
+const createTodo = {
+  type: TodoType,
+  args: {
+    text: { type: GraphQLString },
+    completed: { type: GraphQLBoolean },
+  },
+  resolve: (_, args) => {
+    let todo = new Todo(args);
+    return todo.save();
+  },
+};
+
+const getTodo = {
+  type: TodoType,
+  args: {
+    id: { type: GraphQLString },
+  },
+  resolve: (_, {id}) => {
+    return Todo.findOne({id});
+  },
+};
+
+// TODO: make a graphql schema, refactor to expose in a module, test it
