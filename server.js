@@ -4,6 +4,7 @@ const {
   graphql,
   GraphQLBoolean,
   GraphQLObjectType,
+  GraphQLSchema,
   GraphQLString,
 } = require('graphql');
 
@@ -65,4 +66,23 @@ const getTodo = {
   },
 };
 
-// TODO: make a graphql schema, refactor to expose in a module, test it
+const QueryType = new GraphQLObjectType({
+  name: 'Query',
+  fields: {
+    getTodo,
+  },
+});
+
+const MutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    createTodo,
+  },
+})
+
+const schema = new GraphQLSchema({
+  query: QueryType,
+  mutation: MutationType,
+});
+
+// TODO: refactor to expose the schema in a module, test it
